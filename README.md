@@ -13,12 +13,11 @@ The project use the following libraries:
         sqlalchemy
         Jinja2
 
-I recommend to use ```virtualenv```. If your system does not have it you can install it via pip command: ```pip install virtualenv```.
+If you have all the libraries in your computer you can start application server via script runserver.sh with the following command```bash runserver.sh```.
+
+If you do not have the all the libraries I recommend to use ```virtualenv```. If your system does not have it you can install it via pip command: ```pip install virtualenv```. Once it is installed you can create new enviroment and run application server there as follows:
 
     virtualenv -p python3 venv
     source venv/bin/activate
     pip install -r req
-
-Now you can start application server. To do it run script startserver.sh.
-
     bash runserver.sh
