@@ -13,5 +13,12 @@ The project use the following libraries:
         sqlalchemy
         Jinja2
 
-if you miss them in your system you can install them from req file as follows:
-```pip install -r req```
+I recommend to use ```virtualenv```. If your system does not have it you can install it via pip command: ```pip install virtualenv```.
+
+    virtualenv -p python3 venv
+    source venv/bin/activate
+    pip install -r req
+
+Now you can start application server. To do it run script startserver.sh.
+
+    bash runserver.sh
