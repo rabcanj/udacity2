@@ -3,7 +3,7 @@ import sqlalchemy as db
 from sqlalchemy.orm import sessionmaker, joinedload
 from sqlalchemy.ext.declarative import declarative_base
 from flask import render_template, request, redirect, url_for, session
-from .models import Category, Base
+from .models import Category, Item, Base
 from flask_oauthlib.client import OAuth, OAuthException
 
 oauth = OAuth()
@@ -31,22 +31,19 @@ def login():
 @app.route('/logout')
 def logout():
     session['oauth_token'] = None
-    return ""
+    return redirect(url_for('index'))
 
 @app.route('/login/authorized')
 @facebook.authorized_handler
 def facebook_authorized(resp):
     if resp is None:
-        return 'Access denied: reason=%s error=%s' % (
-            request.args['error_reason'],
-            request.args['error_description']
-        )
-    session['oauth_token'] = (resp['access_token'], '')
-    me = facebook.get('/me')
-    print(me.data)
-    return 'Logged in as id=%s name=%s redirect=%s' % \
-        (me.data['id'], me.data['name'], request.args.get('next'))
+        return 'Access denied'
 
+    session['oauth_token'] = (resp['access_token'], '')
+    me = facebook.get('/me?fields=name,email')
+    # session['me'] = (me.data)
+    print(me.data)
+    return redirect(url_for('index'))
 
 @facebook.tokengetter
 def get_facebook_oauth_token():
@@ -74,10 +71,25 @@ def create_database():
 
 
 @app.route('/index')
-def index():
+@facebook.authorized_handler
+def index(resp):
     connection, session,engine = get_connection()
     categories = session.query(Category).all()
-    return render_template('index.html', categories=categories)
+    recent_items = session.query(Item).\
+        order_by(Item.created_date)
+    try:
+        me = facebook.get('/me?fields=name,email')
+    except:
+        return render_template('index.html',
+            categories=categories,
+            recent_items=recent_items,
+            user={}
+        )
+    return render_template('index.html',
+        categories=categories,
+        user=me.data,
+        recent_items=recent_items
+    )
 
 
 @app.route('/category', methods = ['GET', 'POST', 'DELETE'])

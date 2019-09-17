@@ -3,65 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Catalog App</title>
-    <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    /* Create two unequal columns that floats next to each other */
-    .column {
-      float: left;
-      padding: 10px;
-      height: 300px; /* Should be removed. Only for demonstration */
-    }
-
-    .left {
-      width: 50%;
-    }
-
-    .right {
-      width: 50%;
-    }
-
-    /* Clear floats after the columns */
-    .row:after {
-      content: "";
-      display: table;
-      clear: both;
-    }
-    ul {
-      list-style-type: none;
-      margin: 0;
-      padding: 0;
-      width: 15%;
-      background-color: #f1f1f1;
-      height: 100%; /* Full height */
-      position: fixed; /* Make it stick, even on scroll */
-      overflow: auto; /* Enable scrolling if the sidenav has too much content */
-    }
-
-    li a {
-      display: block;
-      color: #000;
-      padding: 8px 16px;
-      text-decoration: none;
-    }
-
-    .bg-red {
-    border-radius: 10px;
-    background: red;
-    margin-top: 40px;
-    padding: 8px 16px;
-    width: 80%;
-    /* width: 200px;
-    height: 150px; */
-    }
-    li a:bg-red {
-      background-color: #555;
-      color: white;
-    }
-
-    </style>
+    <link rel="stylesheet" href="static/styles.css">
 
   </head>
   <body>
@@ -70,7 +12,11 @@
        <li><a href="default.asp">Home</a></li>
        <li><a href="news.asp">Add Category</a></li>
        <li><a href="news.asp">Add Item</a></li>
-       <li class="bg-red"><a href="news.asp">Login</a></li>
+       {% if "name" in user %}
+          <li class="bg-red"><a href="/logout">Logout {{ user.name }}</a></li>
+      {% else %}
+          <li class="bg-red"><a href="/login">Login</a></li>
+      {% endif %}
     </ul>
     <h1>Catalog App</h1>
     <div style="margin-left:25%;padding:1px 16px;">
@@ -83,14 +29,11 @@
       </div>
       <div class="column right" style="background-color:#bbb;">
         <h2>Latest Items</h2>
-        <p>Some text..</p>
+        {% for item in recent_items %}
+          <p>{{ item }}</p>
+        {% endfor %}
       </div>
     </div>
     </div>
-
-
-
-
-
   </body>
 </html>

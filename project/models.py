@@ -1,8 +1,8 @@
 from app import app
-import sqlalchemy as db
-from sqlalchemy import Column, Integer, String
+import datetime
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
@@ -21,6 +21,7 @@ class Category(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
+    item = relationship("Item")
 
     def __repr__(self):
         return f'{self.name}'
@@ -30,8 +31,9 @@ class Item(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    Category = Column(Integer)
+    category_id = Column(Integer, ForeignKey('CATEGORY.id'))
     description = Column(String)
+    created_date = Column(DateTime, default=datetime.datetime.utcnow)
 
     def __repr__(self):
-        return f'User {self.name}: {self.description}'
+        return f'{self.name}'
