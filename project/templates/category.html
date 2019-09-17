@@ -6,13 +6,13 @@
   <div class="column left" style="background-color:#aaa;">
     <h2>Categories</h2>
     {% for category in categories %}
-      <a href="/item?category_id={{ category.id }}">{{ category }}</a><br>
+      <p>{{ category }}</p>
     {% endfor %}
   </div>
   <div class="column right" style="background-color:#bbb;">
     <h2>Latest Items</h2>
-    {% for item in items %}
-        <a href="/desc?id={{ item.id }}"> {{ item.name }} ({{ item.category }}) </a><br>
+    {% for item in recent_items %}
+      <p>{{ item.name }} ({{ item.category }})</p>
     {% endfor %}
   </div>
 </div>

@@ -6,22 +6,12 @@ from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
-class User(Base):
-    __tablename__ = 'USERS'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    password = Column(String)
-
-    def __repr__(self):
-        return f'User {self.name}'
 
 class Category(Base):
     __tablename__ = 'CATEGORY'
 
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    item = relationship("Item")
 
     def __repr__(self):
         return f'{self.name}'
@@ -32,8 +22,10 @@ class Item(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     category_id = Column(Integer, ForeignKey('CATEGORY.id'))
+    category = relationship("Category", backref='Item')
     description = Column(String)
     created_date = Column(DateTime, default=datetime.datetime.utcnow)
+    user_email = Column(String)
 
     def __repr__(self):
-        return f'{self.name}'
+        return f'{self.name} ({self.category_id})'

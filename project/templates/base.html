@@ -1,0 +1,26 @@
+<! — “Parent Template” →
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Catalog App</title>
+    <link rel="stylesheet" href="static/styles.css">
+
+  </head>
+  <body>
+    <h1>Catalog App</h1>
+    <ul>
+       <li><a href="/index">Home</a></li>
+       <li><a href="news.asp">Add Category</a></li>
+       <li><a href="/add_item">Add Item</a></li>
+       {% if "name" in user %}
+          <li class="bg-red"><a href="/logout">Logout {{ user.name }}</a></li>
+      {% else %}
+          <li class="bg-red"><a href="/login">Login</a></li>
+      {% endif %}
+    </ul>
+
+    {% block content %}{% endblock %}
+
+  </body>
+</html>

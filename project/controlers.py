@@ -4,50 +4,9 @@ from sqlalchemy.orm import sessionmaker, joinedload
 from sqlalchemy.ext.declarative import declarative_base
 from flask import render_template, request, redirect, url_for, session
 from .models import Category, Item, Base
-from flask_oauthlib.client import OAuth, OAuthException
+from .fboauth import facebook, get_facebook_oauth_token
+import flask_oauthlib
 
-oauth = OAuth()
-
-facebook = oauth.remote_app(
-    'facebook',
-    consumer_key='960930254299463',
-    consumer_secret='5779e0bd681e37816ed0a8420a517fd6',
-    request_token_params={'scope': 'email', "auth_type": "reauthenticate"},
-    base_url='https://graph.facebook.com/',
-    request_token_url=None,
-    access_token_url='/oauth/access_token',
-    access_token_method='GET',
-    authorize_url='https://www.facebook.com/dialog/oauth'
-)
-
-
-
-@app.route('/login')
-def login():
-    return facebook.authorize(callback=url_for('facebook_authorized',
-        next=request.args.get('next') or request.referrer or None,
-        _external=True))
-
-@app.route('/logout')
-def logout():
-    session['oauth_token'] = None
-    return redirect(url_for('index'))
-
-@app.route('/login/authorized')
-@facebook.authorized_handler
-def facebook_authorized(resp):
-    if resp is None:
-        return 'Access denied'
-
-    session['oauth_token'] = (resp['access_token'], '')
-    me = facebook.get('/me?fields=name,email')
-    # session['me'] = (me.data)
-    print(me.data)
-    return redirect(url_for('index'))
-
-@facebook.tokengetter
-def get_facebook_oauth_token():
-    return session.get('oauth_token')
 
 def get_connection(db_engine='sqlite:///catalog.sqlite'):
     engine = db.create_engine(db_engine)
@@ -55,6 +14,12 @@ def get_connection(db_engine='sqlite:///catalog.sqlite'):
     session = DBSession()
     return engine.connect(), session, engine
 
+def checklogin():
+    try:
+        me = facebook.get('/me?fields=name,email')
+    except flask_oauthlib.client.OAuthException:
+        return render_template('nlog.html')
+    return me
 
 @app.route('/create_database')
 def create_database():
@@ -75,28 +40,121 @@ def create_database():
 def index(resp):
     connection, session,engine = get_connection()
     categories = session.query(Category).all()
-    recent_items = session.query(Item).\
-        order_by(Item.created_date)
+    items = session.query(Item).\
+        order_by(Item.created_date.desc()).all()
     try:
         me = facebook.get('/me?fields=name,email')
     except:
         return render_template('index.html',
             categories=categories,
-            recent_items=recent_items,
+            items=items,
             user={}
         )
     return render_template('index.html',
         categories=categories,
         user=me.data,
-        recent_items=recent_items
+        items=items
     )
 
 
-@app.route('/category', methods = ['GET', 'POST', 'DELETE'])
-def crud_category():
+@app.route('/add_item')
+@facebook.authorized_handler
+def add_item_form(resp):
     connection, session,engine = get_connection()
+    categories = session.query(Category).all()
+    try:
+        me = facebook.get('/me?fields=name,email')
+        return render_template('add_item_form.html',categories=categories,user=me.data)
+    except flask_oauthlib.client.OAuthException:
+        return render_template('nlog.html')
+
+
+@app.route('/update_item')
+@facebook.authorized_handler
+def update_item_form(resp):
+    connection, session,engine = get_connection()
+    categories = session.query(Category).all()
+    try:
+        me = facebook.get('/me?fields=name,email')
+        data = request.args.to_dict()
+        item = session.query(Item).filter(Item.user_email==me.data['email'],Item.id==data['id']).first()
+        return render_template('add_item_form.html',categories=categories,user=me.data)
+    except flask_oauthlib.client.OAuthException:
+        return render_template('nlog.html')
+    return render_template('nlog.html')
+
+
+@app.route('/item', methods = ['POST'])
+def post_item():
+    connection, session,engine = get_connection()
+    # POST creates new item
     if request.method == 'POST':
-        new_category = Category(**request.json)
-        session.add(new_category)
+        me = checklogin()
+        data = request.form.to_dict()
+        category=session.query(Category).filter(Category.name==data['category_name']).first()
+        new_item = Item(name=data['name'], description=data['description'],category_id=category.id,user_email=me.data['email'])
+        session.add(new_item)
         session.commit()
-        return "i"
+        return redirect(url_for('index'))
+
+
+@app.route('/item', methods = ['GET'])
+def get_item():
+    connection, session,engine = get_connection()
+    if request.method == 'GET':
+        # filter according to **data
+        data = request.args.to_dict()
+        query = session.query(Item)
+        for attr,value in data.items():
+            query = query.filter( getattr(Item,attr)==value )
+        items = query.all()
+        categories = session.query(Category).all()
+        try:
+            me = checklogin()
+            return render_template('index.html',
+                categories=categories,
+                user=me.data,
+                items=items
+            )
+        except:
+            return render_template('index.html',
+                categories=categories,
+                user={},
+                items=items
+            )
+
+
+@app.route('/desc', methods = ['GET'])
+def get_desc():
+    connection, session,engine = get_connection()
+    if request.method == 'GET':
+        # filter according to **data
+        data = request.args.to_dict()
+        query = session.query(Item)
+        for attr,value in data.items():
+            query = query.filter( getattr(Item,attr)==value )
+        items = query.all()
+        try:
+            me = checklogin()
+            return render_template('description.html',
+                user=me.data,
+                items=items
+            )
+        except:
+            return render_template('description.html',
+                user={},
+                items=items
+            )
+
+@app.route('/item', methods = ['PUT'])
+def put_item():
+    connection, session,engine = get_connection()
+    # POST creates new item
+    if request.method == 'PUT':
+        me = checklogin()
+        data = request.form.to_dict()
+        category=session.query(Category).filter(Category.name==data['category_name']).first()
+        new_item = Item(name=data['name'], description=data['description'],category_id=category.id,user_email=me.data['email'])
+        session.add(new_item)
+        session.commit()
+        return redirect(url_for('index'))

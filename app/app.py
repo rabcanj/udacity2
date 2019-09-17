@@ -1,2 +1,2 @@
 from . import app
-from project import controlers, models
+from project import controlers, models, fboauth

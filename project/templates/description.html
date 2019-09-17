@@ -1,0 +1,16 @@
+<! — “Child Template” →
+{% extends "base.html" %}
+{% block content %}
+<div style="margin-left:25%;padding:1px 16px;">
+  <div class="row">
+  <div class="column" style="background-color:#aaa;">
+    {% for item in items %}
+      <h3>Description of <i>{{ item.name }}</i> </h3>
+      <p>{{ item.description }}</p>
+      <a href="/desc?id={{ item.id }}"> EDIT </a>
+      <a href="/desc?id={{ item.id }}"> DELETE </a>
+    {% endfor %}
+  </div>
+</div>
+</div>
+{% endblock %}
