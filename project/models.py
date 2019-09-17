@@ -1,8 +1,9 @@
 from app import app
-
 import sqlalchemy as db
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
+
+
 Base = declarative_base()
 
 class User(Base):
@@ -22,7 +23,7 @@ class Category(Base):
     name = Column(String)
 
     def __repr__(self):
-        return f'User {self.name}'
+        return f'{self.name}'
 
 class Item(Base):
     __tablename__ = 'ITEM'
@@ -34,20 +35,3 @@ class Item(Base):
 
     def __repr__(self):
         return f'User {self.name}: {self.description}'
-
-
-@app.route('/create_database')
-def hello_from():
-    engine = db.create_engine('sqlite:///census.sqlite')
-    connection = engine.connect()
-    Base.metadata.create_all(engine)
-
-
-
-    # metadata = db.MetaData()
-    # census = db.Table('census', metadata, autoload=True, autoload_with=engine)
-    # query = db.select([census])
-    # ResultProxy = connection.execute(query)
-    # ResultSet = ResultProxy.fetchall()
-    # print(ResultSet[:3])
-    return('done')

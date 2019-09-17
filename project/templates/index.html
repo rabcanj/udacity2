@@ -2,55 +2,95 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
-    <style media="screen">
-      ul {
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-        width: 15%;
-        background-color: #f1f1f1;
-        height: 100%; /* Full height */
-        position: fixed; /* Make it stick, even on scroll */
-        overflow: auto; /* Enable scrolling if the sidenav has too much content */
-      }
+    <title>Catalog App</title>
+    <style>
+    * {
+      box-sizing: border-box;
+    }
 
-      li a {
-        display: block;
-        color: #000;
-        padding: 8px 16px;
-        text-decoration: none;
-      }
+    /* Create two unequal columns that floats next to each other */
+    .column {
+      float: left;
+      padding: 10px;
+      height: 300px; /* Should be removed. Only for demonstration */
+    }
 
-      /* Change the link color on hover */
-      li a:hover {
-        background-color: #555;
-        color: white;
-      }
+    .left {
+      width: 50%;
+    }
+
+    .right {
+      width: 50%;
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      width: 15%;
+      background-color: #f1f1f1;
+      height: 100%; /* Full height */
+      position: fixed; /* Make it stick, even on scroll */
+      overflow: auto; /* Enable scrolling if the sidenav has too much content */
+    }
+
+    li a {
+      display: block;
+      color: #000;
+      padding: 8px 16px;
+      text-decoration: none;
+    }
+
+    .bg-red {
+    border-radius: 10px;
+    background: red;
+    margin-top: 40px;
+    padding: 8px 16px;
+    width: 80%;
+    /* width: 200px;
+    height: 150px; */
+    }
+    li a:bg-red {
+      background-color: #555;
+      color: white;
+    }
+
     </style>
+
   </head>
   <body>
     <h1>Catalog App</h1>
     <ul>
        <li><a href="default.asp">Home</a></li>
        <li><a href="news.asp">Add Category</a></li>
-       <li><a href="contact.asp">Contact</a></li>
-       <li><a href="about.asp">About</a></li>
+       <li><a href="news.asp">Add Item</a></li>
+       <li class="bg-red"><a href="news.asp">Login</a></li>
     </ul>
     <h1>Catalog App</h1>
     <div style="margin-left:25%;padding:1px 16px;">
-      <h2>Fixed Full-height Side Nav</h2>
-      <h3>Try to scroll this area, and see how the sidenav sticks to the page</h3>
-      <p>Notice that this div element has a left margin of 25%. This is because the side navigation is set to 25% width. If you remove the margin, the sidenav will overlay/sit on top of this div.</p>
-      <p>Also notice that we have set overflow:auto to sidenav. This will add a scrollbar when the sidenav is too long (for example if it has over 50 links inside of it).</p>
-      <p>Some text..</p>
-      <p>Some text..</p>
-      <p>Some text..</p>
-      <p>Some text..</p>
-      <p>Some text..</p>
-      <p>Some text..</p>
-      <p>Some text..</p>
+      <div class="row">
+      <div class="column left" style="background-color:#aaa;">
+        <h2>Categories</h2>
+        {% for category in categories %}
+          <p>{{ category }}</p>
+        {% endfor %}
+      </div>
+      <div class="column right" style="background-color:#bbb;">
+        <h2>Latest Items</h2>
+        <p>Some text..</p>
+      </div>
     </div>
+    </div>
+
+
+
+
 
   </body>
 </html>
