@@ -17,16 +17,19 @@ facebook = oauth.remote_app(
     authorize_url='https://www.facebook.com/dialog/oauth'
 )
 
+
 @app.route('/login')
 def login():
-    return facebook.authorize(callback=url_for('facebook_authorized',
-        next=request.args.get('next') or request.referrer or None,
-        _external=True))
+    return facebook.authorize(callback=url_for(
+        'facebook_authorized', next=request.args.get('next')
+        or request.referrer or None, _external=True))
+
 
 @app.route('/logout')
 def logout():
     session['oauth_token'] = None
     return redirect(url_for('index'))
+
 
 @app.route('/login/authorized')
 @facebook.authorized_handler
@@ -39,6 +42,7 @@ def facebook_authorized(resp):
     # session['me'] = (me.data)
     print(me.data)
     return redirect(url_for('index'))
+
 
 @facebook.tokengetter
 def get_facebook_oauth_token():

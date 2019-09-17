@@ -15,12 +15,13 @@ class Category(Base):
 
     def get_dict(self):
         return {
-            'id':self.id,
-            'name':self.name
+            'id': self.id,
+            'name': self.name
         }
 
     def __repr__(self):
         return f'{self.name}'
+
 
 class Item(Base):
     __tablename__ = 'ITEM'
@@ -38,10 +39,10 @@ class Item(Base):
 
     def get_dict(self):
         return {
-            'id':self.id,
-            'name':self.name,
-            'description':self.description,
-            'name':self.name,
-            'created_date':self.created_date,
-            'user_email':self.user_email
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'name': self.name,
+            'created_date': self.created_date,
+            'user_email': self.user_email
         }

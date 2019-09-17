@@ -4,6 +4,8 @@ from sqlalchemy.orm import sessionmaker
 from .models import Category, Item, Base
 import os
 from flask import redirect, url_for
+
+
 def get_connection(db_engine='sqlite:///catalog.sqlite'):
     engine = db.create_engine(db_engine)
     DBSession = sessionmaker(bind=engine)
@@ -13,7 +15,11 @@ def get_connection(db_engine='sqlite:///catalog.sqlite'):
 
 @app.route('/create_database')
 def create_database():
-    # Create database and fill it with basic data
+    """
+        Create database and fill it with basic data
+        This method does not care about auth,
+        it is just for comfortable testing
+    """
     connection, session, engine = get_connection()
     for tbl in reversed(Base.metadata.sorted_tables):
         engine.execute(tbl.delete())
@@ -24,7 +30,7 @@ def create_database():
     session.add(Category(name='HDD/SSD disks'))
     session.add(Category(name='Monitors'))
 
-    category=session.query(Category).filter(Category.name=='CPUs').first()
+    category = session.query(Category).filter(Category.name == 'CPUs').first()
     new_item = Item(
         name="Intel Core i7",
         description='4 Cores, 8 Threads. Intel Optane Memory Supported',
@@ -46,7 +52,8 @@ def create_database():
         user_email='rabcanj@gmail.com'
     )
     session.add(new_item)
-    category=session.query(Category).filter(Category.name=='Mother Boards').first()
+    category = session.query(Category).filter(
+        Category.name == 'Mother Boards').first()
     new_item = Item(
         name="Mother Board 1",
         description='Mother board for intel cpus',
@@ -61,7 +68,8 @@ def create_database():
         user_email='rabcanj@gmail.com'
     )
     session.add(new_item)
-    category=session.query(Category).filter(Category.name=='Graphic Cards').first()
+    category = session.query(Category).filter(
+        Category.name == 'Graphic Cards').first()
     new_item = Item(
         name="NVIDIA 1060",
         description='Medium level card. Able to run new games on mid details.',
@@ -83,7 +91,8 @@ def create_database():
         user_email='rabcanj@gmail.com'
     )
     session.add(new_item)
-    category=session.query(Category).filter(Category.name=='HDD/SSD disks').first()
+    category = session.query(Category).filter(
+        Category.name == 'HDD/SSD disks').first()
     new_item = Item(
         name="100GB SSD",
         description='Low capacity, but fast.',
@@ -105,7 +114,8 @@ def create_database():
         user_email='rabcanj@gmail.com'
     )
     session.add(new_item)
-    category=session.query(Category).filter(Category.name=='Monitors').first()
+    category = session.query(Category).filter(
+        Category.name == 'Monitors').first()
     new_item = Item(
         name="ASSUS 17 LCD",
         description='Small, low quality, cheap .',
