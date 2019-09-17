@@ -11,8 +11,9 @@
     <h1>Catalog App</h1>
     <ul>
        <li><a href="/index">Home</a></li>
-       <li><a href="news.asp">Add Category</a></li>
+       <li><a href="/json_data">JSON data</a></li>
        <li><a href="/add_item">Add Item</a></li>
+       <li><a href="/create_database">Create/Reset datase</a></li>
        {% if "name" in user %}
           <li class="bg-red"><a href="/logout">Logout {{ user.name }}</a></li>
       {% else %}

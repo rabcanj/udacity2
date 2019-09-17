@@ -1,8 +1,9 @@
 <! — “Child Template” →
 {% extends "base.html" %}
 {% block content %}
+<h3 style="margin-left:25%;padding:1px 16px;">Update item</h3>
 <form style="margin-left:25%;padding:1px 16px;" action="/update_item" method="post">
-  <input type="hidden" name="_method" value="put" />
+  <input type="hidden" name="id" value="{{ item.id }}" />
    Item Name: <input type="text" name="name" value="{{ item.name }}"><br>
    Item description: <input type="text" name="description" value="{{ item.description }}"><br>
    Item Category: <select id="country" name="category_name" value="{{ item.category }}">

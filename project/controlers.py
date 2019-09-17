@@ -1,6 +1,6 @@
 from app import app
 import sqlalchemy as db
-from sqlalchemy.orm import sessionmaker, joinedload
+from sqlalchemy.orm import sessionmaker, joinedload,exc
 from sqlalchemy.ext.declarative import declarative_base
 from flask import render_template, request, redirect, url_for, session
 from .models import Category, Item, Base
@@ -21,18 +21,10 @@ def checklogin():
         return render_template('nlog.html')
     return me
 
-@app.route('/create_database')
-def create_database():
-    # Create database and fill it with basic data
-    connection, session, engine = get_connection()
-    Base.metadata.create_all(engine)
-    session.add(Category(name='CPUs'))
-    session.add(Category(name='Mother Boards'))
-    session.add(Category(name='Graphic Cards'))
-    session.add(Category(name='HDD/SSD disks'))
-    session.add(Category(name='Monitors'))
-    session.commit()
-    return('done')
+@app.route('/auth_error')
+def raise_auth_error():
+    me=checklogin()
+    return render_template('nlog.html',user=me.data)
 
 
 @app.route('/index')
@@ -48,12 +40,14 @@ def index(resp):
         return render_template('index.html',
             categories=categories,
             items=items,
-            user={}
+            user={},
+            latest='Latest'
         )
     return render_template('index.html',
         categories=categories,
         user=me.data,
-        items=items
+        items=items,
+        latest='Latest'
     )
 
 
@@ -69,7 +63,7 @@ def add_item_form(resp):
         return render_template('nlog.html')
 
 
-@app.route('/update_item')
+@app.route('/update_item_form')
 @facebook.authorized_handler
 def update_item_form(resp):
     connection, session,engine = get_connection()
@@ -77,12 +71,44 @@ def update_item_form(resp):
     try:
         me = facebook.get('/me?fields=name,email')
         data = request.args.to_dict()
+        # we do not allow to update items that does not belong to logged user
         item = session.query(Item).filter(Item.user_email==me.data['email'],Item.id==data['id']).first()
-        return render_template('add_item_form.html',categories=categories,user=me.data)
+        if item:
+            return render_template('update_item_form.html',categories=categories,item=item, user=me.data)
     except flask_oauthlib.client.OAuthException:
         return render_template('nlog.html')
     return render_template('nlog.html')
 
+
+@app.route('/update_item', methods = ['POST'])
+def update_item():
+    connection, session,engine = get_connection()
+    # POST creates new item
+    if request.method == 'POST':
+        me = checklogin()
+        data = request.form.to_dict()
+        print(data)
+        category=session.query(Category).filter(Category.name==data['category_name']).first()
+        item = session.query(Item).filter(Item.id==data['id']).first()
+        item.description = data['description']
+        item.name = data['name']
+        item.category_id=category.id
+        # session.add(new_item)
+        session.commit()
+        return redirect(url_for('index'))
+
+
+@app.route('/delete_item/<id>')
+def delete_item(id):
+    me = checklogin()
+    connection, session,engine = get_connection()
+    item = session.query(Item).filter(Item.id==id, me.data['email']==Item.user_email).first()
+    try:
+        session.delete(item)
+        session.commit()
+        return redirect(url_for('index'))
+    except exc.UnmappedInstanceError:
+        return redirect(url_for('raise_auth_error'))
 
 @app.route('/item', methods = ['POST'])
 def post_item():
@@ -146,15 +172,17 @@ def get_desc():
                 items=items
             )
 
-@app.route('/item', methods = ['PUT'])
-def put_item():
+@app.route('/json_data', methods = ['GET'])
+def json_data():
+    res = []
     connection, session,engine = get_connection()
-    # POST creates new item
-    if request.method == 'PUT':
-        me = checklogin()
-        data = request.form.to_dict()
-        category=session.query(Category).filter(Category.name==data['category_name']).first()
-        new_item = Item(name=data['name'], description=data['description'],category_id=category.id,user_email=me.data['email'])
-        session.add(new_item)
-        session.commit()
-        return redirect(url_for('index'))
+    categories = session.query(Category).all()
+    for category in categories:
+        category_dict = category.get_dict()
+        category_dict['items'] = []
+        items=session.query(Item).filter(category.id==Item.category_id).all()
+        for item in items:
+            category_dict['items'].append(item.get_dict())
+        res.append(category_dict)
+
+    return({'json':res})

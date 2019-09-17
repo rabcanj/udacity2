@@ -10,7 +10,7 @@
     {% endfor %}
   </div>
   <div class="column right" style="background-color:#bbb;">
-    <h2>Latest Items</h2>
+    <h2>{{ latest }} Items</h2>
     {% for item in items %}
         <a href="/desc?id={{ item.id }}"> {{ item.name }} ({{ item.category }}) </a><br>
     {% endfor %}

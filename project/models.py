@@ -13,6 +13,12 @@ class Category(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String)
 
+    def get_dict(self):
+        return {
+            'id':self.id,
+            'name':self.name
+        }
+
     def __repr__(self):
         return f'{self.name}'
 
@@ -29,3 +35,13 @@ class Item(Base):
 
     def __repr__(self):
         return f'{self.name} ({self.category_id})'
+
+    def get_dict(self):
+        return {
+            'id':self.id,
+            'name':self.name,
+            'description':self.description,
+            'name':self.name,
+            'created_date':self.created_date,
+            'user_email':self.user_email
+        }

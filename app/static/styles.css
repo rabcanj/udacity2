@@ -37,6 +37,9 @@ div {
 .column {
   float: left;
   padding: 10px;
+  min-height:700px;
+  height: auto;
+
 }
 
 .left {
