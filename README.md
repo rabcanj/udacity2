@@ -1,7 +1,7 @@
 # Item Catalog
 
 ## Project Description
-This project is an catalog of computer components (processors, graphic cards, memories, etc.).
+This project is an catalog of computer components (processors, graphic cards, memories, etc.). Users can see items and they can delete/edit items that belongs to them.
 
 ### How to run Project
 1. vagrant up
