@@ -9,6 +9,9 @@ import flask_oauthlib
 
 
 def get_connection(db_engine='sqlite:///catalog.sqlite'):
+    """
+        creates connection to the database
+    """
     engine = db.create_engine(db_engine)
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
@@ -16,6 +19,9 @@ def get_connection(db_engine='sqlite:///catalog.sqlite'):
 
 
 def checklogin():
+    """
+        check if user is logged
+    """
     try:
         me = facebook.get('/me?fields=name,email')
     except flask_oauthlib.client.OAuthException:
@@ -25,6 +31,11 @@ def checklogin():
 
 @app.route('/auth_error')
 def raise_auth_error():
+    """
+        Raise auth error logged/unloged want to see for him forbiden content,
+        If user is logged in then renders the template with his name,
+        otherwise render template without user details
+    """
     me = checklogin()
     try:
         return render_template('nlog.html', user=me.data)
@@ -117,7 +128,6 @@ def update_item():
     if request.method == 'POST':
         me = checklogin()
         data = request.form.to_dict()
-        print(data)
         category = session.query(Category).filter(
             Category.name == data['category_name']).first()
         item = session.query(Item).filter(Item.id == data['id']).first()
