@@ -27,7 +27,7 @@ This project is an catalog of computer components (processors, graphic cards, me
 
 Project should be running on url: https://localhost:8000/index. HTTPS protocol must be used because of  facebook authentication, which is used in this project. Current version of facebook authentication require https.
 
-Main part of the:
+Main part of the project:
 Install requirements:
    1. Templates: stored in project/templates. HTML language is generated from them.
    1. controlers.py: stored in project/controlers.py, main apis are here
