@@ -19,7 +19,7 @@ This project is an catalog of computer components (processors, graphic cards, me
          virtualenv -p python3 venv
          source venv/bin/activate
          #run this command only once
-         pip install -r req
+         pip install -r requirements.txt
 
 4. cd /vagrant/catalog
 1. Clone the following git repo: https://github.com/rabcanj/udacity2
