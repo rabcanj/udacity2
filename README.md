@@ -12,7 +12,7 @@ This project is an catalog of computer components (processors, graphic cards, me
    1. Jinja2
    1. flask_oauthlib
 
-   Virtualenv can be used in a following way:
+   Virtualenv can be used in a following way (not mandatory):
 
 
          #run this command only once
@@ -33,3 +33,9 @@ Install requirements:
    1. controlers.py: stored in project/controlers.py, main apis are here
    1. fboauth.py: stored in project/fboauth.py, taking care of authentication
    1. models.py:  stored in project/models.py, contains classes from which database structure is created
+
+### Special endpoints and features
+
+In menu you can find button Create/reset databse. It removes all the data from the database and creates some initial data. This feature does not require authentication, it was created only because of comfortable testing.
+
+https://localhost:8000/json_data returns categories and its items in json structure.
