@@ -123,6 +123,7 @@ def update_item_form(resp):
 def update_item():
     """
         method for updating items
+        form validation done by html
     """
     connection, session, engine = get_connection()
     if request.method == 'POST':
@@ -161,6 +162,7 @@ def delete_item(id):
 def post_item():
     """
         method for creating new items
+        form validation done by html
     """
     connection, session, engine = get_connection()
     # POST creates new item
@@ -240,21 +242,44 @@ def get_desc():
 
 
 @app.route('/json_data', methods=['GET'])
-def json_data():
+def json_data(category_id=None, item_id=None):
     """
-    return all data in json
+    endpoint returns data in json for an arbitary item
+    examples:
+    For the whole database:
+        https://localhost:8000/json_data
+    For items:
+        https://localhost:8000/json_data?item_id=2
+    For categories:
+        https://localhost:8000/json_data?category_id=2
+    Combination of both
+        https://localhost:8000/json_data?category_id=2&item_id=5
     """
+    data = request.args.to_dict()
+    category_id = data.get('category_id')
+    item_id = data.get('item_id')
     res = []
     connection, session, engine = get_connection()
-    categories = session.query(Category).all()
+    if category_id:
+        categories = session.query(Category).filter(
+            Category.id == category_id
+        ).all()
+    else:
+        categories = session.query(Category).all()
     for category in categories:
         category_dict = category.get_dict()
         category_dict['items'] = []
-        items = session.query(Item).filter(
-            category.id == Item.category_id).all()
+        if item_id:
+            items = session.query(Item).filter(
+                category.id == Item.category_id, Item.id == item_id).all()
+        else:
+            items = session.query(Item).filter(
+                category.id == Item.category_id).all()
         for item in items:
             category_dict['items'].append(item.get_dict())
-        res.append(category_dict)
+        if len(category_dict['items']) > 0 or\
+                category_id or (not category_id and not item_id):
+            res.append(category_dict)
     return({
         'json': res
         })

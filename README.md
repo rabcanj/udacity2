@@ -39,3 +39,9 @@ Main part of the project:
 In menu you can find button Create/reset databse. It removes all the data from the database and creates some initial data. This feature does not require authentication, it was created only because of comfortable testing.
 
 https://localhost:8000/json_data returns categories and its items in json structure.
+You can use the endpoint for searching arbitrary item (just examples):
+
+      https://localhost:8000/json_data
+      https://localhost:8000/json_data?item_id=2
+      https://localhost:8000/json_data?category_id=2
+      https://localhost:8000/json_data?category_id=2&item_id=5
