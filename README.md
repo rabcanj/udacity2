@@ -1,23 +1,35 @@
 # Item Catalog
 
 ## Project Description
-The Item Catalog project consists of developing an application that provides a list of
-items within a variety of categories, as well as provide a user registration and authentication system.
+This project is an catalog of computer components (processors, graphic cards, memories, etc.).
 
-## Solution Description
-This project is item an catalog of computer components (processors, graphic cards, memories, etc.).
+### How to run Project
+1. vagrant up
+1. vagrant ssh
+1. Install requirements:
+   1. flask
+   1. sqlalchemy
+   1. Jinja2
+   1. flask_oauthlib
 
-The project use the following libraries:
+   Virtualenv can be used in a following way:
 
-        flask
-        sqlalchemy
-        Jinja2
 
-If you have all the libraries in your computer you can start application server via script runserver.sh with the following command```bash runserver.sh```.
+         #run this command only once
+         virtualenv -p python3 venv
+         source venv/bin/activate
+         #run this command only once
+         pip install -r req
 
-If you do not have the all the libraries I recommend to use ```virtualenv```. If your system does not have it you can install it via pip command: ```pip install virtualenv```. Once it is installed you can create new enviroment and run application server there as follows:
+4. cd /vagrant/catalog
+1. Clone the following git repo: https://github.com/rabcanj/udacity2
+1. source runserver.sh
 
-    virtualenv -p python3 venv
-    source venv/bin/activate
-    pip install -r req
-    bash runserver.sh
+Project should be running on url: https://localhost:8000/index. HTTPS protocol must be used because of  facebook authentication, which is used in this project. Current version of facebook authentication require https.
+
+Main part of the:
+Install requirements:
+   1. Templates: stored in project/templates. HTML language is generated from them.
+   1. controlers.py: stored in project/controlers.py, main apis are here
+   1. fboauth.py: stored in project/fboauth.py, taking care of authentication
+   1. models.py:  stored in project/models.py, contains classes from which database structure is created
