@@ -4,8 +4,8 @@
 <h3 style="margin-left:25%;padding:1px 16px;">Update item</h3>
 <form style="margin-left:25%;padding:1px 16px;" action="/update_item" method="post">
   <input type="hidden" name="id" value="{{ item.id }}" />
-   Item Name: <input type="text" name="name" value="{{ item.name }}"><br>
-   Item description: <input type="text" name="description" value="{{ item.description }}"><br>
+   Item Name: <input type="text" name="name" value="{{ item.name }}" required minlength="6" required pattern = "\S.*\S""><br>
+   Item description: <input type="text" name="description" value="{{ item.description }}" required minlength="6" required pattern = "\S.*\S"><br>
    Item Category: <select id="country" name="category_name" value="{{ item.category }}">
      {% for category in categories %}
        <option value="{{ category }}">{{ category }}</option>
