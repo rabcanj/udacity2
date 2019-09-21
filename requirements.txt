@@ -2,3 +2,4 @@ flask
 sqlalchemy
 Jinja2
 flask_oauthlib
+Gunicorn
