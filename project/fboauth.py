@@ -6,8 +6,8 @@ oauth = OAuth()
 
 facebook = oauth.remote_app(
     'facebook',
-    consumer_key='960930254299463',
-    consumer_secret='5779e0bd681e37816ed0a8420a517fd6',
+    consumer_key='2510884298976413',
+    consumer_secret='d3145652fda374aa7481c90b96274b67',
     # request_token_params={'scope': 'email', "auth_type": "reauthenticate"},
     request_token_params={'scope': 'email'},
     base_url='https://graph.facebook.com/',
