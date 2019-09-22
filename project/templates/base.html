@@ -16,6 +16,8 @@
        <li><a href="/create_database">Create/Reset datase</a></li>
        {% if "name" in user %}
           <li class="bg-red"><a href="/logout">Logout {{ user.name }}</a></li>
+      {% else %}
+          <li class="bg-red"><a href="#">Open https://165.22.94.80.xip.io/ and login again</a></li>
       {% endif %}
     </ul>
 
