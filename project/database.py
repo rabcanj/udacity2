@@ -6,7 +6,11 @@ import os
 from flask import redirect, url_for
 
 
-def get_connection(db_engine='sqlite:///catalog.sqlite'):
+def get_connection(db_engine='postgresql://catalog:ovviodwa@localhost/catalog'):
+    """
+        creates connection to the database
+        IN CASE YOU WANT TO USE sqlite:///catalog.sqlite
+    """
     engine = db.create_engine(db_engine)
     DBSession = sessionmaker(bind=engine)
     session = DBSession()

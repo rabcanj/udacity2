@@ -8,9 +8,10 @@ from .fboauth import facebook, get_facebook_oauth_token
 import flask_oauthlib
 
 
-def get_connection(db_engine='sqlite:///catalog.sqlite'):
+def get_connection(db_engine='postgresql://catalog:ovviodwa@localhost/catalog'):
     """
         creates connection to the database
+        SQLLITE: sqlite:///catalog.sqlite
     """
     engine = db.create_engine(db_engine)
     DBSession = sessionmaker(bind=engine)
