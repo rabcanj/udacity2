@@ -17,11 +17,8 @@ facebook = oauth.remote_app(
     authorize_url='https://www.facebook.com/dialog/oauth'
 )
 
-@app.route('/getin')
-def getin():
-    return redirect('https://165.22.94.80.xip.io/login')
 
-
+@app.route('/')
 @app.route('/login/')
 def login():
     return facebook.authorize(callback=url_for(

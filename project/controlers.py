@@ -45,7 +45,6 @@ def raise_auth_error():
         return render_template('nlog.html')
 
 
-@app.route('/')
 @app.route('/index')
 @facebook.authorized_handler
 def index(resp):
