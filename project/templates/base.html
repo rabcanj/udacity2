@@ -17,11 +17,16 @@
        {% if "name" in user %}
           <li class="bg-red"><a href="/logout">Logout {{ user.name }}</a></li>
       {% else %}
-          <li class="bg-red"><script>
-          function myFunction() {
-            window.open("https://www.w3schools.com");
-          }
-          </script>
+          <li class="bg-red">
+
+            <button onclick="myFunction()">Try it</button>
+
+            <script>
+            function myFunction() {
+              window.open("https://www.w3schools.com");
+            }
+            </script>
+
           </li>
       {% endif %}
     </ul>
