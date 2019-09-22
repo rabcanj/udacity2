@@ -8,8 +8,8 @@ facebook = oauth.remote_app(
     'facebook',
     consumer_key='1520760008133172',
     consumer_secret='7a173e3c11891b6e8ef0bd2536acd46c',
-    # request_token_params={'scope': 'email', "auth_type": "reauthenticate"},
-    request_token_params={'scope': 'email'},
+    request_token_params={'scope': 'email', "auth_type": "reauthenticate"},
+    # request_token_params={'scope': 'email'},
     base_url='https://graph.facebook.com/',
     request_token_url=None,
     access_token_url='/oauth/access_token',
@@ -17,8 +17,12 @@ facebook = oauth.remote_app(
     authorize_url='https://www.facebook.com/dialog/oauth'
 )
 
+@app.route('/getin')
+def getin():
+    return redirect('https://165.22.94.80.xip.io/login')
 
-@app.route('/login')
+
+@app.route('/login/')
 def login():
     return facebook.authorize(callback=url_for(
         'facebook_authorized', next=request.args.get('next')
