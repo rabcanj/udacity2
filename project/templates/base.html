@@ -16,8 +16,6 @@
        <li><a href="/create_database">Create/Reset datase</a></li>
        {% if "name" in user %}
           <li class="bg-red"><a href="/logout">Logout {{ user.name }}</a></li>
-      {% else %}
-          <li class="bg-red"><a href="/">Login</a></li>
       {% endif %}
     </ul>
 
